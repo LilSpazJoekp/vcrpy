@@ -97,7 +97,10 @@ def replace_post_data_parameters(request, replacements):
         else:
             if isinstance(request.body, str):
                 request.body = request.body.encode("utf-8")
-            splits = [p.partition(b"=") for p in request.body.split(b"&")]
+            if isinstance(request.body, list):
+                splits = [(k.encode("utf-8"), b"=", v.encode("utf-8")) for k, v in request._body]
+            else:
+                splits = [p.partition(b"=") for p in request.body.split(b"&")]
             new_splits = []
             for k, sep, ov in splits:
                 if sep is None:
