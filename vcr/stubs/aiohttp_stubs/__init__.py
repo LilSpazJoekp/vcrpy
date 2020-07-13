@@ -91,24 +91,24 @@ def play_responses(cassette, vcr_request):
 
     # If we're following redirects, continue playing until we reach
     # our final destination.
-    while 300 <= response.status <= 399:
-        if "location" not in response.headers:
-            break
-
-        next_url = URL(response.url).with_path(response.headers["location"])
-
-        # Make a stub VCR request that we can then use to look up the recorded
-        # VCR request saved to the cassette. This feels a little hacky and
-        # may have edge cases based on the headers we're providing (e.g. if
-        # there's a matcher that is used to filter by headers).
-        vcr_request = Request("GET", str(next_url), None, _serialize_headers(response.request_info.headers))
-        vcr_request = cassette.find_requests_with_most_matches(vcr_request)[0][0]
-
-        # Tack on the response we saw from the redirect into the history
-        # list that is added on to the final response.
-        history.append(response)
-        vcr_response = cassette.play_response(vcr_request)
-        response = build_response(vcr_request, vcr_response, history)
+    # while 300 <= response.status <= 399:
+    #     if "location" not in response.headers:
+    #         break
+    #
+    #     next_url = URL(response.url).with_path(response.headers["location"])
+    #
+    #     # Make a stub VCR request that we can then use to look up the recorded
+    #     # VCR request saved to the cassette. This feels a little hacky and
+    #     # may have edge cases based on the headers we're providing (e.g. if
+    #     # there's a matcher that is used to filter by headers).
+    #     vcr_request = Request("GET", str(next_url), None, _serialize_headers(response.request_info.headers))
+    #     vcr_request = cassette.find_requests_with_most_matches(vcr_request)[0][0]
+    #
+    #     # Tack on the response we saw from the redirect into the history
+    #     # list that is added on to the final response.
+    #     history.append(response)
+    #     vcr_response = cassette.play_response(vcr_request)
+    #     response = build_response(vcr_request, vcr_response, history)
 
     return response
 
